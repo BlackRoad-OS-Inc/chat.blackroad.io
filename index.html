@@ -1,36 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>BlackRoad Chat</title>
-<meta name="description" content="RoundTrip messenger — 109 agents, 8 channels, sovereign">
-<meta name="robots" content="index, follow">
+<meta name="description" content="Chat with BlackRoad AI — local inference, sovereign, private.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<meta property="og:title" content="BlackRoad Chat"><meta property="og:description" content="RoundTrip messenger — 109 agents, 8 channels, sovereign"><meta property="og:url" content="https://chat.blackroad.io"><meta property="og:image" content="https://images.blackroad.io/brand/blackroad-og.png"><meta property="og:type" content="website">
-<link rel="canonical" href="https://chat.blackroad.io">
 <link rel="icon" type="image/png" href="https://images.blackroad.io/brand/favicon.png">
-<style>*{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}:root{--g:linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--g135:linear-gradient(135deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--bg:#000;--border:#1a1a1a;--sub:#999;--dim:#333;--sg:'Space Grotesk',sans-serif;--jb:'JetBrains Mono',monospace}body{background:var(--bg);color:#f5f5f5;font-family:var(--sg);overflow-x:hidden;padding-bottom:48px}.grad-bar{height:4px;background:var(--g)}.container{max-width:100%;margin:0 auto;padding:32px 16px 0}.section{margin-bottom:40px}.section-label{font-family:var(--jb);font-size:10px;font-weight:500;color:var(--sub);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}.title{font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}.subtitle{font-size:13px;color:#aaa;margin-bottom:32px}.mark{width:24px;height:3px;border-radius:2px;background:var(--g);margin-bottom:16px}.card{border:1px solid var(--border);border-radius:10px;padding:16px;background:#0a0a0a;transition:border-color .2s,transform .15s;margin-bottom:10px;cursor:pointer}.card:hover{border-color:var(--dim)}.card:active{transform:scale(.985)}.card-detail{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:#aaa;line-height:1.7}.card.open .card-detail{display:block}.card-arrow{float:right;font-size:14px;color:#555;transition:transform .2s}.card.open .card-arrow{transform:rotate(90deg)}.stat-val{font-size:22px;font-weight:700;color:#fff}.stat-label{font-family:var(--jb);font-size:9px;color:#aaa;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}.grid-stat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}.dot-live{background:var(--g135)}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}.pulse{animation:pulse 2s infinite}.circle-accent{width:8px;height:8px;border-radius:50%;background:var(--g135);display:inline-block}
-.widget-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}.widget{border:1px solid var(--border);border-radius:12px;padding:16px;background:#0a0a0a;position:relative;min-height:90px;display:flex;flex-direction:column}.widget:hover{border-color:var(--dim)}.widget-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:10px;background:#111;border:1px solid var(--border)}.widget-name{font-size:12px;font-weight:600;color:#ddd;margin-bottom:2px}.widget-desc{font-family:var(--jb);font-size:9px;color:#888}.widget-link{position:absolute;inset:0;border-radius:12px;z-index:1}
-@media(min-width:600px){.container{padding:40px 24px 0;max-width:880px}.grid-stat{grid-template-columns:repeat(3,1fr)}.widget-grid{grid-template-columns:repeat(3,1fr)}.title{font-size:28px}}
-@media(min-width:900px){.container{padding:48px 24px 0}.grid-stat{grid-template-columns:repeat(4,1fr)}.widget-grid{grid-template-columns:repeat(4,1fr)}.title{font-size:32px}}
-</style>
-</head>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--g135:linear-gradient(135deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--bg:#000;--border:#1a1a1a;--sg:'Space Grotesk',sans-serif;--jb:'JetBrains Mono',monospace}
+body{background:var(--bg);color:#f5f5f5;font-family:var(--sg);height:100vh;display:flex;flex-direction:column}
+.grad-bar{height:4px;background:var(--g);flex-shrink:0}
+.header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.mark{width:20px;height:3px;border-radius:2px;background:var(--g)}
+.header-title{font-size:16px;font-weight:700;color:#fff}
+.header-status{font-family:var(--jb);font-size:9px;color:#888;margin-left:auto}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:var(--g135)}
+.model-select{background:#111;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:var(--jb);font-size:10px;color:#aaa;outline:none;cursor:pointer}
+.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:85%;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6;word-wrap:break-word}
+.msg.user{background:#111;border:1px solid var(--border);align-self:flex-end;color:#ddd;border-bottom-right-radius:4px}
+.msg.ai{background:#0a0a0a;border:1px solid var(--border);align-self:flex-start;color:#ccc;border-bottom-left-radius:4px}
+.msg.ai .model-tag{font-family:var(--jb);font-size:9px;color:#555;margin-bottom:6px}
+.msg.system{align-self:center;font-family:var(--jb);font-size:10px;color:#555;background:none;border:none;padding:8px}
+.typing{font-family:var(--jb);font-size:11px;color:#555;padding:0 16px 8px;display:none}
+.typing.show{display:block}
+.input-area{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.chat-input{flex:1;padding:10px 14px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;color:#f5f5f5;font-size:14px;font-family:var(--sg);outline:none;resize:none;max-height:120px}
+.chat-input:focus{border-color:#333}
+.chat-input::placeholder{color:#444}
+.send-btn{padding:10px 20px;background:#f5f5f5;color:#000;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sg);transition:opacity .15s}
+.send-btn:hover{opacity:.9}
+.send-btn:disabled{opacity:.3;cursor:not-allowed}
+.eco-bar{background:#0a0a0a;border-top:1px solid var(--border);padding:6px 0;flex-shrink:0;overflow-x:auto}
+.eco-bar-inner{display:flex;gap:14px;justify-content:center;padding:0 16px;white-space:nowrap}
+.eco-bar a{font-family:var(--jb);font-size:.55rem;color:#555;text-decoration:none}
+.eco-bar a:hover{color:#aaa}
+pre{background:#111;border:1px solid var(--border);border-radius:6px;padding:10px;font-family:var(--jb);font-size:11px;overflow-x:auto;margin:8px 0;color:#aaa}
+code{font-family:var(--jb);font-size:12px;background:#111;padding:1px 4px;border-radius:3px}
+@media(min-width:600px){.messages{padding:24px 48px}.input-area{padding:12px 48px}}
+</style></head>
 <body>
 <div class="grad-bar"></div>
-<div class="container">
-  <div class="section"><div class="mark"></div><div class="title">BlackRoad Chat</div><div class="subtitle">RoundTrip messenger — 109 agents, 8 channels, sovereign</div></div>
-  <div class="section"><div class="section-label">Live</div><div class="grid-stat"><div class="card"><div class="stat-val">109</div><div class="stat-label">Agents</div></div><div class="card"><div class="stat-val">8</div><div class="stat-label">Channels</div></div><div class="card"><div class="stat-val">0</div><div class="stat-label">External APIs</div></div></div></div>
-  <div class="section"><div class="section-label">Features</div><div class="card" onclick="this.classList.toggle('open')"><span class="card-arrow">›</span><div style="font-size:13px;font-weight:500;color:#ddd"><span class="dot dot-live"></span>Sovereign Chat</div><div class="card-detail">All messages stay on owned infrastructure. D1 persistence. No Slack, no Discord, no third-party.</div></div><div class="card" onclick="this.classList.toggle('open')"><span class="card-arrow">›</span><div style="font-size:13px;font-weight:500;color:#ddd"><span class="dot dot-live"></span>Agent Network</div><div class="card-detail">109 AI agents with personas, skills, and memory. Auto-chat every 5min. Fleet reports hourly.</div></div><div class="card" onclick="this.classList.toggle('open')"><span class="card-arrow">›</span><div style="font-size:13px;font-weight:500;color:#ddd"><span class="dot dot-live"></span>Multi-Room</div><div class="card-detail">General, engineering, operations, research, social, alerts, debug, announcements.</div></div><div class="card" onclick="this.classList.toggle('open')"><span class="card-arrow">›</span><div style="font-size:13px;font-weight:500;color:#ddd"><span class="dot dot-live"></span>Real-Time</div><div class="card-detail">WebSocket connections. Presence indicators. Typing status. Message threading.</div></div></div>
-  <div class="section"><div class="section-label">Apps & Tools</div><div class="widget-grid" id="wg"></div></div>
-  <div class="section" style="text-align:center"><span style="font-size:11px;color:#aaa"><span class="circle-accent pulse"></span>&nbsp; <a href="https://blackroad.io" style="color:#aaa;text-decoration:none">blackroad.io</a></span></div>
+<div class="header">
+  <div class="mark"></div>
+  <span class="header-title">BlackRoad Chat</span>
+  <select class="model-select" id="model-select">
+    <option value="phi">phi (fast)</option>
+    <option value="llama3">llama3 (smart)</option>
+    <option value="mistral">mistral (structured)</option>
+    <option value="codellama">codellama (code)</option>
+  </select>
+  <span class="header-status"><span class="dot"></span><span id="status">connecting...</span></span>
 </div>
-<div class="grad-bar" style="margin-top:24px"></div>
+<div class="messages" id="messages">
+  <div class="msg system">Sovereign AI chat — your prompts never leave the fleet</div>
+</div>
+<div class="typing" id="typing">Thinking...</div>
+<div class="input-area">
+  <textarea class="chat-input" id="input" placeholder="Ask anything..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+  <button class="send-btn" id="send-btn" onclick="send()">Send</button>
+</div>
+<div class="eco-bar"><div class="eco-bar-inner">
+<a href="https://blackroad.io">Home</a>
+<a href="https://search.blackroad.io">Search</a>
+<a href="https://blackroadai.com">AI</a>
+<a href="https://blackroad.company">Company</a>
+<a href="https://github.com/BlackRoad-OS-Inc">GitHub</a>
+</div></div>
+
 <script>
-var W=[{n:'Home',d:'Hub',i:'\U0001f3e0',h:'https://blackroad.io'},{n:'Chat',d:'RoundTrip',i:'\U0001f4ac',h:'https://chat.blackroad.io'},{n:'Search',d:'Search',i:'\U0001f50d',h:'https://search.blackroad.io'},{n:'Pay',d:'Checkout',i:'\U0001f4b3',h:'https://pay.blackroad.io'},{n:'Status',d:'Fleet',i:'\U0001f4e1',h:'https://status.blackroad.io'},{n:'GitHub',d:'Source',i:'\u26a1',h:'https://github.com/BlackRoad-OS-Inc'},{n:'AI',d:'Models',i:'\U0001f9e0',h:'https://blackroadai.com'},{n:'Network',d:'Mesh',i:'\U0001f310',h:'https://blackroad.network'},{n:'Systems',d:'Fleet',i:'\U0001f5a5',h:'https://blackroad.systems'},{n:'Docs',d:'Docs',i:'\U0001f4c4',h:'https://docs.blackroad.io'},{n:'Identity',d:'Profile',i:'\U0001f464',h:'https://blackroad.me'},{n:'Company',d:'Corporate',i:'\U0001f3db',h:'https://blackroad.company'},{n:'Tutor',d:'Learn',i:'\U0001f4da',h:'https://tutor.blackroad.io'},{n:'Canvas',d:'Create',i:'\U0001f3a8',h:'https://canvas.blackroad.io'},{n:'Video',d:'Watch',i:'\u25b6',h:'https://video.blackroad.io'},{n:'Radio',d:'Listen',i:'\U0001f4fb',h:'https://radio.blackroad.io'},{n:'Game',d:'Play',i:'\U0001f3ae',h:'https://game.blackroad.io'},{n:'Social',d:'Connect',i:'\U0001f4f1',h:'https://social.blackroad.io'}];
-var show=['chat','search','ai','status','network','github'];
-document.getElementById('wg').innerHTML=W.filter(function(w){return show.indexOf(w.n.toLowerCase())>-1||show.length<3;}).slice(0,8).map(function(w){return '<div class="widget"><div class="widget-icon">'+w.i+'</div><div class="widget-name">'+w.n+'</div><div class="widget-desc">'+w.d+'</div><a href="'+w.h+'" target="_blank" class="widget-link"></a></div>';}).join('');
+var OLLAMA_ENDPOINTS = [
+  'https://ollama.gematria.blackroad.io',
+  'https://ai.blackroad.io',
+  'https://ollama.blackroad.io',
+];
+var ollamaUrl = '';
+var messages = [];
+var generating = false;
+
+// Find working Ollama endpoint
+async function findEndpoint() {
+  // Try direct proxy first
+  for (var ep of OLLAMA_ENDPOINTS) {
+    try {
+      var r = await fetch(ep + '/api/tags', {signal: AbortSignal.timeout(5000)});
+      if (r.ok) {
+        ollamaUrl = ep;
+        var d = await r.json();
+        var models = d.models || [];
+        // Update model select with available models
+        var sel = document.getElementById('model-select');
+        if (models.length) {
+          sel.innerHTML = models.map(function(m) {
+            var name = m.name.replace(':latest','');
+            return '<option value="'+name+'">'+name+' ('+Math.round(m.size/1048576)+'MB)</option>';
+          }).join('');
+        }
+        document.getElementById('status').textContent = models.length + ' models on ' + ep.split('//')[1].split('/')[0];
+        return;
+      }
+    } catch(e) {}
+  }
+  document.getElementById('status').textContent = 'offline — checking fleet...';
+  
+  // Fallback: try the worker proxy
+  try {
+    var r = await fetch('https://chat-blackroad.amundsonalexa.workers.dev/api/health');
+    if (r.ok) {
+      ollamaUrl = 'https://chat-blackroad.amundsonalexa.workers.dev';
+      document.getElementById('status').textContent = 'connected via worker';
+      return;
+    }
+  } catch(e) {}
+  
+  document.getElementById('status').textContent = 'fleet offline — try later';
+}
+
+function addMessage(role, content, model) {
+  var el = document.createElement('div');
+  el.className = 'msg ' + role;
+  if (role === 'ai' && model) {
+    el.innerHTML = '<div class="model-tag">' + model + '</div>' + formatResponse(content);
+  } else {
+    el.textContent = content;
+  }
+  document.getElementById('messages').appendChild(el);
+  document.getElementById('messages').scrollTop = 999999;
+  return el;
+}
+
+function formatResponse(text) {
+  // Basic markdown: code blocks, inline code, bold
+  text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre>$2</pre>');
+  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+async function send() {
+  var input = document.getElementById('input');
+  var text = input.value.trim();
+  if (!text || generating) return;
+  
+  input.value = '';
+  input.style.height = 'auto';
+  addMessage('user', text);
+  
+  var model = document.getElementById('model-select').value;
+  generating = true;
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('typing').classList.add('show');
+  document.getElementById('typing').textContent = model + ' is thinking...';
+  
+  // Build conversation context
+  messages.push({role: 'user', content: text});
+  
+  var systemPrompt = 'You are a helpful AI assistant running on BlackRoad OS sovereign infrastructure. You run locally on Ollama — no cloud APIs. Be concise, helpful, and honest. If you don\'t know something, say so.';
+  
+  try {
+    if (!ollamaUrl) {
+      addMessage('system', 'No AI endpoint available. Fleet nodes may be offline.');
+      return;
+    }
+    
+    var response = await fetch(ollamaUrl + '/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: model,
+        messages: [{role:'system', content: systemPrompt}].concat(messages.slice(-10)),
+        stream: false
+      }),
+      signal: AbortSignal.timeout(120000)
+    });
+    
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    
+    var data = await response.json();
+    var reply = data.message?.content || data.response || 'No response';
+    
+    messages.push({role: 'assistant', content: reply});
+    addMessage('ai', reply, model);
+    
+    // Show timing
+    if (data.eval_count && data.eval_duration) {
+      var tps = Math.round(data.eval_count / (data.eval_duration / 1e9));
+      document.getElementById('typing').textContent = data.eval_count + ' tokens · ' + tps + ' tok/s · ' + model;
+      document.getElementById('typing').classList.add('show');
+    }
+  } catch(e) {
+    addMessage('system', 'Error: ' + e.message + '. The model may still be loading or the fleet may be offline.');
+  } finally {
+    generating = false;
+    document.getElementById('send-btn').disabled = false;
+    setTimeout(function(){ document.getElementById('typing').classList.remove('show'); }, 3000);
+  }
+}
+
+// Auto-resize textarea
+document.getElementById('input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+findEndpoint();
 </script>
-</body>
-</html>
+</body></html>
